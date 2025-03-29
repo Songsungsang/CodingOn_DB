@@ -34,7 +34,7 @@ FOREIGN KEY (cust_id) REFERENCES customer(cust_id)
 ON DELETE CASCADE
 ON UPDATE CASCADE;
 
-ALTER TABLE oders DROP FOREIGN KEY fk_customer;
+ALTER TABLE orders DROP FOREIGN KEY fk_customer;
 
 DESC orders;
 
