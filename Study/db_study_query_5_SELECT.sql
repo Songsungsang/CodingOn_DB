@@ -78,3 +78,25 @@ WHERE age IS NULL; -- 반대는 IS NOT NULL
 -- distinct -> 중복 요소를 제거
 SELECT DISTINCT gender
 FROM student;
+
+-- group by, having
+USE my_shop;
+
+SELECT cust_id, sum(amount) -- group by 할때 숫자에 대한 처리
+FROM orders
+GROUP BY cust_id;
+
+SELECT CUST_ID "고객 아이디", SUM(amount) "총 구매 개수" 
+FROM orders 
+GROUP BY cust_id;
+
+SELECT CUST_ID "고객 아이디", SUM(amount * price) "총 구매 금액" 
+FROM orders 
+GROUP BY cust_id
+ORDER BY SUM(amount * price) DESC; -- 별칭인 총 구매 금액으로는 검색이 안됐음
+
+SELECT CUST_ID "고객 아이디", SUM(amount * price) "총 구매 금액" 
+FROM orders 
+GROUP BY cust_id
+HAVING SUM(price * amount) > 400000
+ORDER BY SUM(amount * price) DESC; -- 별칭인 총 구매 금액으로는 검색이 안됐음
