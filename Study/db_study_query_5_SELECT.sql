@@ -93,10 +93,10 @@ GROUP BY cust_id;
 SELECT CUST_ID "고객 아이디", SUM(amount * price) "총 구매 금액" 
 FROM orders 
 GROUP BY cust_id
-ORDER BY SUM(amount * price) DESC; -- 별칭인 총 구매 금액으로는 검색이 안됐음
+ORDER BY "총 구매 금액" DESC; 
 
 SELECT CUST_ID "고객 아이디", SUM(amount * price) "총 구매 금액" 
 FROM orders 
 GROUP BY cust_id
 HAVING SUM(price * amount) > 400000
-ORDER BY SUM(amount * price) DESC; -- 별칭인 총 구매 금액으로는 검색이 안됐음
+ORDER BY "총 구매 금액" DESC;
