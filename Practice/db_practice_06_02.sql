@@ -39,5 +39,12 @@ SELECT p.name AS product_name, SUM(quantity) AS total_quantity
 FROM order_items o
 	JOIN products p
     ON o.product_id = p.product_id
-GROUP BY product_name
-HAVING unit_price IS NOT NULL;
+WHERE unit_price IS NOT NULL
+GROUP BY product_name;
+
+SELECT c.name AS customer_name, p.name AS product_name, quantity, unit_price
+FROM orders o
+	JOIN order_items o_i ON o.order_id = o_i.order_id
+    JOIN products p ON o_i.product_id = p.product_id
+    JOIN customers c ON o.customer_id = c.customer_id
+WHERE unit_price IS NOT NULL;
