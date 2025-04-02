@@ -15,6 +15,6 @@ FROM users
 WHERE MOD(user_id, 2) = 1 AND (name LIKE "%김%" OR name LIKE "%이%");
 
 -- 4. 배송완료된 주문 중, 주문일로부터 7일 이상 경과한 주문을 조회하시오.
-SELECT order_id, order_status, created_at, DATEDIFF(NOW(), created_at) AS days_ago
+SELECT order_id, order_status, created_at, DATEDIFF(NOW(), created_at) AS days_since_order
 FROM orders
 WHERE order_status = "배송완료" AND DATEDIFF(NOW(), created_at) >= 7;
