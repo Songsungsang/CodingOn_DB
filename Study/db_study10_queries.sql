@@ -26,3 +26,10 @@ SELECT name,
      WHERE customer_id = c.customer_id -- 바깥 SELECT의 customer의 customer_id 접근 가능
      ) order_count
 FROM customers c;
+
+-- View = 가상의 테이블을 저장. 함수랑 같진 않지만 비슷
+CREATE VIEW order_price AS
+	SELECT order_id, 
+    SUM(quantity * unit_price * (1-discount_rate/100)) AS total_price
+    FROM order_items
+    GROUP BY order_id;
