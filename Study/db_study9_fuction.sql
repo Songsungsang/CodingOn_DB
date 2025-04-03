@@ -108,3 +108,16 @@ SELECT order_id, created_at,
         ELSE "오래된 주문"
 	END order_age
 FROM orders;
+
+-- 암시적 형변환
+SELECT '100' + '200'; -- 300
+SELECT 100 + 200; -- 이거도 300
+-- 문자열 결합 CONCAT
+SELECT CONCAT("100", "200");
+SELECT CONCAT(100, "200"); -- CONCAT은 전부 문자열로 바꿈
+
+-- 명시적 형변환 : CAST, CONVERT
+SELECT CAST('123' AS SIGNED); -- SIGNED = INT. 즉, '123'을 SIGNEDINT 123으로 변환중
+SELECT CAST(3.14 AS CHAR);
+SELECT CAST("2025&4&3" AS DATE); -- 날짜 변환
+-- CONVERT - 문자 셋을 지정할때 필요
