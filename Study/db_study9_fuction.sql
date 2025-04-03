@@ -58,3 +58,53 @@ SELECT DATE_ADD("2025-03-14", INTERVAL 3 DAY); -- 날짜에 	Interval 3일 더�
 
 -- Year, Month, Day : 년도 월 날 추출
 SELECT YEAR("2025-04-01") year, MONTH("2025-04-01"), DAY("2025-04-01");
+
+-- 날짜 포멧
+SELECT DATE_FORMAT(now(), "%Y년-%m월-%d일");
+
+-- IF
+USE codingon_db;
+
+SELECT name, gender,
+	IF(gender = "남", "Male", "Female") gender_eng
+FROM student;
+
+USE codingon_store_db;
+	
+SELECT name, price,
+	IF(price >= 10000, "비쌈", "저렴") price_level
+FROM products;
+
+-- IFNULL
+SELECT name, IFNULL(phone, "전화번호 없음")
+FROM customers;
+
+SELECT name, IFNULL(membership_level, "IRON")
+FROM customers;
+
+-- NULLIF
+SELECT order_id, order_status,
+	 NULLIF(order_status, "처리중") order_status_edit
+FROM orders;
+
+-- CASE
+SELECT
+	order_id, order_status,
+    CASE order_status
+		WHEN "결제완료" THEN "준비 중"
+        WHEN "배송중" THEN "이동 중"
+        WHEN "완료" THEN "도착"
+        WHEN "주문취소" THEN "취소됨"
+        ELSE "알 수 없음"
+	END AS status_label
+FROM orders;
+
+USE function_db;
+SELECT order_id, created_at,
+	datediff(now(), created_at) days_ago,
+    CASE
+		WHEN DATEDIFF(now(), created_at) <= 3 THEN "최근 주문"
+        WHEN DATEDIFF(now(), created_at) <= 7 THEN "지난주 주문"
+        ELSE "오래된 주문"
+	END order_age
+FROM orders;
