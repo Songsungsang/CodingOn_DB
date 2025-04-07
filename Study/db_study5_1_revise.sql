@@ -45,6 +45,6 @@ INSERT INTO employee_setnull VALUES
 DELETE FROM departments
 WHERE department_id = 1;
 
-SELECT * FROM departments;
+SELECT * FROM departments; -- 부서 확인
 SELECT * FROM employee_cascade; -- 연결된 테이블의 row 자체 삭제됨
 SELECT * FROM employee_setnull; -- 연결된 테이블의 해당 column 값 null 처리 되고 끝
