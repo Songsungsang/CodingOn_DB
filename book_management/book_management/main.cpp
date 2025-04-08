@@ -9,8 +9,8 @@ std::unique_ptr<sql::Connection> con;
 void createBook() {
 	// 책 등록
 	string title, author, published_at;
-
 	int price;
+
 	cin.ignore(); // 옵션 선택으로 인한 버퍼정리
 	cout << "Book Title: ";
 	getline(cin, title);
@@ -164,7 +164,7 @@ void listMembers() {
 		unique_ptr<sql::ResultSet> res(selectQuery->executeQuery());
 
 		// 결과 출력
-		while (res->next()) {
+		while (res->next()) { // 다음 행으로. 없으면 실행 종료
 			cout << "[" << res->getInt("member_id") << "]"
 				<< res->getString("name") << "/"
 				<< res->getString("email") << "/"
@@ -261,9 +261,12 @@ void rentBook() {
 		selectQuery->setString(2, phone);
 
 		unique_ptr<sql::ResultSet> res(selectQuery->executeQuery());
-		while (res->next()) {
-			member_id = res->getInt("member_id");
+		if (!res->next()) {
+			cout << "Member with the name and phone number does not exist";
+			return;
 		}
+
+		member_id = res->getInt("member_id");
 	}
 	catch (sql::SQLException& e) {
 		cerr << "Select failed " << e.what() << endl;
@@ -276,9 +279,12 @@ void rentBook() {
 		selectQuery->setString(1, title); // 책 이름이 title이고 대여상태가 대여가능인 책 선택
 
 		unique_ptr<sql::ResultSet> res(selectQuery->executeQuery());
-		while (res->next()) {
-			book_id = res->getInt("book_id");
+		if (!res->next()) {
+			cout << "Rentable book with the title does not exist";
+			return ;
 		}
+
+		book_id = res->getInt("book_id");
 	}
 	catch (sql::SQLException& e) {
 		cerr << "Select failed " << e.what() << endl;
@@ -342,9 +348,8 @@ void returnBook() {
 		selectQuery->setInt(1, rental_id); // rental_id 통해 book_id 찾기
 
 		unique_ptr<sql::ResultSet> res(selectQuery->executeQuery());
-		while (res->next()) {
-			book_id = res->getInt("book_id");
-		}
+		res->next(); // 1번 행으로 가려면 한번은 next 해야 함
+		book_id = res->getInt("book_id");
 	}
 	catch (sql::SQLException& e) {
 		cerr << "Select failed " << e.what() << endl;
@@ -368,7 +373,12 @@ void returnBook() {
 void showRentalStatus() {
 	try {
 		unique_ptr<sql::PreparedStatement> selectQuery(
-			con->prepareStatement("SELECT * FROM rentals") // 정보 전부 다
+			con->prepareStatement("SELECT rental_id, title, name, rented_at "
+								"FROM rentals r "
+								"JOIN books b ON r.book_id = b.book_id "
+								"JOIN members m ON r.member_id = m.member_id "
+								"WHERE r.returned_at IS NULL"
+			) // 정보 합쳐서 보여주기. 책 이름이 뭔지, 누가 빌렸는지, 언제 빌렸는지
 		);
 
 		//쿼리 싱핼 및 결과 수신
@@ -377,10 +387,9 @@ void showRentalStatus() {
 		// 결과 출력
 		while (res->next()) {
 			cout << "[" << res->getInt("rental_id") << "]"
-				<< res->getInt("book_id") << "/"
-				<< res->getInt("member_id") << "/"
-				<< res->getString("rented_at") << "/"
-				<< res->getString("returned_at") << "/" << endl;
+				<< res->getString("title") << "/"
+				<< res->getString("name") << "/"
+				<< res->getString("rented_at") << "/" << endl;
 		}
 	}
 	catch (sql::SQLException& e) {
@@ -389,7 +398,7 @@ void showRentalStatus() {
 }
 
 void showMenu() {
-	cout << "\n====Customer management====\n";
+	cout << "\n==== Book Store management ====\n";
 	cout << "1. Add book" << endl
 		<< "2. Show book list" << endl
 		<< "3. Change book info" << endl
