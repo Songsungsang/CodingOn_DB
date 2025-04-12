@@ -33,7 +33,11 @@ def root():
 def create_user(user: UserCreate, db: Session = Depends(get_db)): # 유저 생성. 클라이언트가 user 정보를 보내줘야만 한다
     # db와 연결하고 query문 날려서 유저 생성
     user_data = User(
-        user.username, user.password, user.name, user.email)
+        username=user.username,
+        password=user.password,
+        name=user.name,
+        email=user.email
+    )
     try:
         db.add(user_data)
         db.commit()
