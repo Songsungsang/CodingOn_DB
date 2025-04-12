@@ -1,18 +1,18 @@
-import mysql.connector
-from mysql.connector import Error
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base
+from dotenv import load_dotenv
+import os
 
-def create_conn(): # db와 연결
-    try:
-        conn = mysql.connector.connect( # DB 연결을 위한 데이터
-            host = "localhost",
-            user = "root",
-            password = "4613mnbv",
-            database = "python_db"
-        )
+load_dotenv()
+DB_HOST = os.getenv("DB_HOST")
+DB_PORT = os.getenv("DB_PORT")
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_NAME = os.getenv("DB_NAME")
 
-        cursor = conn.cursor()
+DATABASE_URL = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
-        return conn, cursor
+engine = create_engine(DATABASE_URL) # DB 접근할 엔진
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine) # 엔진 관리할 세션
 
-    except Error as e:
-        print("DB 연결 오류", e)
+Base = declarative_base()
